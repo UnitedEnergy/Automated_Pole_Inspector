@@ -27,82 +27,82 @@ The full procedure is managed by one script that takes the pictures from a given
 ####Directories and main elements
 The script expects a directory that contains the images that are about to be analyzed (working directory) and it allows to add different storage paths for the results obtained on different stages of the procedure. The most relevant points on this section are:
 
-*Directories definition.
+-Directories definition.
 
-*Size delineation for reduced images. The variable “j” usually was tested with value of 500 (500 x 500 pixels) but it can be adjusted.
+-Size delineation for reduced images. The variable “j” usually was tested with value of 500 (500 x 500 pixels) but it can be adjusted.
 
-*Variable “output” that will store the picture classification is created.
+-Variable “output” that will store the picture classification is created.
 
 
 ####Image Pre-processing
 In this section the following elements are implemented:
 
-*List of all files (pictures) present on the working directory.
+-List of all files (pictures) present on the working directory.
 
-*Reduced version (“img”) of the original image.
+-Reduced version (“img”) of the original image.
 
-*Edge detection is performed using the gradient (dilate – erode) on the blue layer of the resized picture. The blue layer was picked as a grayscale version of the original file due to its higher contrast levels between some color shades that tend to be problematic to handle in this image set such as green areas, sky, among others.
+-Edge detection is performed using the gradient (dilate – erode) on the blue layer of the resized picture. The blue layer was picked as a grayscale version of the original file due to its higher contrast levels between some color shades that tend to be problematic to handle in this image set such as green areas, sky, among others.
  
 ####Component Labelling
 This module contains the main processes of the program, from creating the elements required to apply this technique and performing the two-pass algorithm till obtaining the areas to be described and selected in the next modules. The main sections of the process are described as it follows:
 
 ####Preparations
-*A label matrix (“labels”) is created; this has the same size as the reduced image and will storage the area’s label that every pixel has been associated to.
+-A label matrix (“labels”) is created; this has the same size as the reduced image and will storage the area’s label that every pixel has been associated to.
 
-*An equivalence table (“areas”) is defined in order to record the existent relations between areas that are part of the same picture’s element but have been labelled on different regions.
+-An equivalence table (“areas”) is defined in order to record the existent relations between areas that are part of the same picture’s element but have been labelled on different regions.
 
-*The threshold value (“v”) that identifies if the image sections are related. This value is adjustable pending on the sensibility wanted to perceive changes in the pixel values. We decided to use 0.0225 since when applying the gradient to identify the edges on the image it is relative easy to notice the changes across the different elements present on the image, this value represents a change of 2.25% in the whole scale of possible values and it’s as well the 50% of the average standard deviation obtained in successfully labelled pictures.
+-The threshold value (“v”) that identifies if the image sections are related. This value is adjustable pending on the sensibility wanted to perceive changes in the pixel values. We decided to use 0.0225 since when applying the gradient to identify the edges on the image it is relative easy to notice the changes across the different elements present on the image, this value represents a change of 2.25% in the whole scale of possible values and it’s as well the 50% of the average standard deviation obtained in successfully labelled pictures.
 
 ####Two-pass (based) algorithm 
-*The image is scanned (from left top to right bottom corner) and the pixels are labelled according on its relation with the ones that are located at the left and up of the focused pixel.
+-The image is scanned (from left top to right bottom corner) and the pixels are labelled according on its relation with the ones that are located at the left and up of the focused pixel.
 
-*The areas are analyzed and any related regions are identified even if they got different labels on the previous step.
+-The areas are analyzed and any related regions are identified even if they got different labels on the previous step.
 
-*The labels obtained are exported to a csv file (optional) as a backup for analysis purposes.
+-The labels obtained are exported to a csv file (optional) as a backup for analysis purposes.
 
 ####Area Description 
-*An area catalogue (“cat”) is defined to storage size and scope of every region created.
+-An area catalogue (“cat”) is defined to storage size and scope of every region created.
 
-*The minimum and maximum number of pixels that an area should contain in order to be considered as potential crossarm section are defined. These values (“minval” and “maxval”) are adjustable and are dependent on the size of the reduced image (“j”). The actual value consider that usually a crossarm section does not cover more than 20% of the image but has always at least 0.2% of the total pixels enclosed by the resized picture.
+-The minimum and maximum number of pixels that an area should contain in order to be considered as potential crossarm section are defined. These values (“minval” and “maxval”) are adjustable and are dependent on the size of the reduced image (“j”). The actual value consider that usually a crossarm section does not cover more than 20% of the image but has always at least 0.2% of the total pixels enclosed by the resized picture.
 
-*The values to store in the catalogue are calculated and stored on “cat”.
+-The values to store in the catalogue are calculated and stored on “cat”.
 
 ####Area Selection and Filtering
-*Evaluates if the regions founded match the size required to be considered as potential crossarm sections discarding all those that are outside that stablished range of values.
+-Evaluates if the regions founded match the size required to be considered as potential crossarm sections discarding all those that are outside that stablished range of values.
 
-*Once the areas that have a reasonable size are kept from dismissing, they are analyzed to verify if the shape, density and location are consistent with the features present on the crossarm pictures.
+-Once the areas that have a reasonable size are kept from dismissing, they are analyzed to verify if the shape, density and location are consistent with the features present on the crossarm pictures.
 
-*After discarding those sections that didn’t match the previous set of statements, the remaining areas are being filtered on a copy of the resized image in order to be able to recognize the original colors on them.
+-After discarding those sections that didn’t match the previous set of statements, the remaining areas are being filtered on a copy of the resized image in order to be able to recognize the original colors on them.
 
-*For removing more irrelevant areas, color thresholding is applied to this filtered version of the image so we can recognize certain color shades that are distant to the metallic and wood crossarm color values.
+-For removing more irrelevant areas, color thresholding is applied to this filtered version of the image so we can recognize certain color shades that are distant to the metallic and wood crossarm color values.
 
 ####Component Labelling (2nd time)
 After finishing the preceding filtering processes, component labelling is performed again so the remaining pixels can be reassigned according to the original edges of the image. This second version of the technique is almost equal to the one already performed to the image, containing the following phases:
 
-*Preparations.
+-Preparations.
 
-*Two-pass (based) algorithm. For this occasion, the adjustable thresholding value (“v”) was redefined to .02 since the previous color filtering processes lessened the original sections edges and a more sensible scan worked better for more accurate regions recreation.
+-Two-pass (based) algorithm. For this occasion, the adjustable thresholding value (“v”) was redefined to .02 since the previous color filtering processes lessened the original sections edges and a more sensible scan worked better for more accurate regions recreation.
 
-*Area description.
+-Area description.
 
-*Area Selection and Filtering. In this module, some of the selection statements have been tailored since it is expected to have “smaller” areas than the ones obtained on the first labelling, so the region filtering considers this fact to still be consistent with the proportional filtering applied throughout the different sections of this program. In addition to this, some of the color filters have been discarded since there is no point on look for pixels with values already removed from the processing image.
+-Area Selection and Filtering. In this module, some of the selection statements have been tailored since it is expected to have “smaller” areas than the ones obtained on the first labelling, so the region filtering considers this fact to still be consistent with the proportional filtering applied throughout the different sections of this program. In addition to this, some of the color filters have been discarded since there is no point on look for pixels with values already removed from the processing image.
 
 ####Picture Classification
 This unit creates a copy of the filtered area labels, so all the pixels enclosed on these regions have the same value (the area label’s number) having all the discarded areas as background with pixel values equals to 0. The method implemented follows the next steps to complete the image segmentation using this regions analysis:
 
-*The regions are picked one at a time and it is verified that the selected region is not labelled already as background in order to proceed to the analysis. It is proven too that the picked area matches the required minimal length (“j/20”) defined to be considered as potential crossarm section. This value is adjustable too.
+-The regions are picked one at a time and it is verified that the selected region is not labelled already as background in order to proceed to the analysis. It is proven too that the picked area matches the required minimal length (“j/20”) defined to be considered as potential crossarm section. This value is adjustable too.
 
-*Once the area matched the first two validations, the matrix “column” is created. This matrix will store the number of pixels on each column that are associated to the selected area, in order to count how many columns match the required minimum height (given the number of pixels on a column) for that given area. That minimum height is given by “j/33”, which is adjustable.
+-Once the area matched the first two validations, the matrix “column” is created. This matrix will store the number of pixels on each column that are associated to the selected area, in order to count how many columns match the required minimum height (given the number of pixels on a column) for that given area. That minimum height is given by “j/33”, which is adjustable.
 
-*The rows enclosed on the selected region are scanned and the pixels on each column associated to the region picked are counted and stored on “column”.
+-The rows enclosed on the selected region are scanned and the pixels on each column associated to the region picked are counted and stored on “column”.
 
-*The columns matching that minimum height value (“j/33”) are counted to verify if this number matches the minimum of columns required to consider that area a crossarm section. This number of required columns is defined by “j/10” (adjustable) and alongside “j/33” was defined to seek the minimum values needed to preserve a size relevant area with the minimum length and height to consider it as potential section to classify the whole image.
+-The columns matching that minimum height value (“j/33”) are counted to verify if this number matches the minimum of columns required to consider that area a crossarm section. This number of required columns is defined by “j/10” (adjustable) and alongside “j/33” was defined to seek the minimum values needed to preserve a size relevant area with the minimum length and height to consider it as potential section to classify the whole image.
 
-*If the picked section does not match these validations, the area is redefined as background and the loop will continue until the first area that matches those criteria appears (meaning there is a crossarm on the picture) or when there is no remaining areas to check.
+-If the picked section does not match these validations, the area is redefined as background and the loop will continue until the first area that matches those criteria appears (meaning there is a crossarm on the picture) or when there is no remaining areas to check.
 
-*After this loop is completed, the picture is classified into the variable “tag” and stored alongside the name of the image (“filename”) into the matrix “output”, which will accumulate the list of images processed with their resulting classification.
+-After this loop is completed, the picture is classified into the variable “tag” and stored alongside the name of the image (“filename”) into the matrix “output”, which will accumulate the list of images processed with their resulting classification.
 
-*Finally, when all images have been classified, the content of the “output” variable is exported into a csv file to preserve the results obtained.
+-Finally, when all images have been classified, the content of the “output” variable is exported into a csv file to preserve the results obtained.
 
 ##Feature Based Approach
 
