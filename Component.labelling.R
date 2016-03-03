@@ -1,22 +1,22 @@
-library(spatstat)
-library(jpeg)
-library(EBImage)
-library(mmand)
-library(RNiftyReg)
-library(xlsx)
-library(PET)
+require(spatstat)
+require(jpeg)
+require(EBImage)
+require(mmand)
+require(RNiftyReg)
+require(xlsx)
+require(PET)
 
 # Directories #
 
 # Working directory (where the pictures are)
-files <- list.files(path="C:/Users/bobob_000/Desktop/Component Labelling", pattern=".JPG", all.files=T, full.names=T)
-wd <- "C:/Users/bobob_000/Desktop/Component Labelling"
+wd <- "./Input_Photos"
+files <- list.files(path=wd, pattern=".JPG", all.files=T, full.names=T)
 
 # CSV files directory (for saving component labels and output record)
-csvd <- "C:/Users/bobob_000/Desktop/Component Labelling/CSV"
+csvd <- "./Component_Labelling/Output_Record"
 
 # Filtered images directory (for saving the images after being processed)
-areasd <- "C:/Users/bobob_000/Desktop/Component Labelling/Filtered"
+areasd <- "./Component_Labelling/Filtered"
 
 # New reduced size of the pictures (resizing to jxj)
 j <- 500
@@ -122,7 +122,7 @@ for (file in files) {
   test <- labels
   #display(labels)  
   fcsv <- gsub(".JPG", ".csv", gsub(wd,csvd,file))
-  write.table(labels, fcsv, sep=",", row.names = FALSE, col.names = FALSE)
+  #write.table(labels, fcsv, sep=",", row.names = FALSE, col.names = FALSE)
   
   
   ###############################################################################

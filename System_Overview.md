@@ -11,17 +11,16 @@ The above flowchart depicts the system overview of this project.
 
 Image pre-processing technique was used by using Component Labelling. This script and documentations can be found in the Component Labelling folder of this project. The purpose of this is to identify whether there is a crossarm present to reduce the amount of images that should be processed or looked at. The reason for this is there are so many images in the data set, with a lot of ‘useless’ images in which there are no crossarms present at all. 
 
-The second technique is the Feature Based Approach where it can predict the crossarm in the image as steel or wood. More of this approach can be found in the Feature Based Approach folder. 
-
-There are also two PowerPoint files, one which is a presentation, the other a poster. This can be looked at to get a quick overall understanding of the project and the techniques that were incorporated to succeeding the goal. 
+The second technique is the Feature Based Approach where it can predict the crossarm in the image as steel or wood. 
 
 ##Component Labelling
 
 ###Overview
-The aim of this procedure is to determine whether an image contain a crossarm or not. In order to achieve this, we employed different techniques that will transform the image, identify the components that are present on it and select those ones that tend to look like crossarms sections just to give a final picture’s classification pending on the filtered regions analysis.
+The aim of this procedure is to determine whether an image contains a crossarm or not. In order to achieve this, different techniques were employed to transform the image, identify the components that are present in it and select those that tend to look like crossarms to give a final picture’s classification pending on the filtered regions analysis.
 
 The full procedure is managed by one script that takes the pictures from a given working directory and processes them to obtain a list of those images and its segmentation that is stored in an output file (csv). 
 
+###Component.labelling.R
 ###Code Features and Phases
 
 ####Directories and main elements
