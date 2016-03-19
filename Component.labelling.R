@@ -502,7 +502,8 @@ for (file in files) {
   while (max(regions) > 0){
     pick <- max(regions)
     
-    # Verifies if the picked area is not the background or an irrelevent region (to discard it if gets picked) and then performs the filtering by shape until finds 1 region matching the criteria or finishes discarding all of them
+    # Verifies if the picked area is not the background or an irrelevent region (to discard it if gets picked) 
+    # and then performs the filtering by shape until finds 1 region matching the criteria or finishes discarding all of them
     if (cat[pick,1] > maxval | cat[pick,5] - cat[pick,4] < j/20 ){
       regions[regions == pick] <- 0
     } else {
